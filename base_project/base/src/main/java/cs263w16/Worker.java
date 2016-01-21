@@ -26,8 +26,8 @@ public class Worker extends HttpServlet {
         entity.setProperty("date", d);
         datastore.put(entity);
 
-        TaskDataValue taskDataValue = new TaskDataValue(value);
-        syncCache.put(keyname, taskDataValue);
+        TaskData taskDataI = new TaskData(keyname, value, d);
+        syncCache.put(keyname, taskDataI);
 
         // Do something with key.
     }

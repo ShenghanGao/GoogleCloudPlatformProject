@@ -16,7 +16,7 @@ public class DatastoreServlet extends HttpServlet {
       resp.setContentType("text/html");
       resp.getWriter().println("<html><body>");
 
-      TaskDataValue memcacheVal;
+      TaskData memcacheVal;
 
   	  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   	  MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
@@ -50,12 +50,15 @@ public class DatastoreServlet extends HttpServlet {
   	  	}
 
   	  	resp.getWriter().println("Memcache entries<br>");
-
   	  	for (Entity result : pq.asIterable()) {
   	  		String resKeyname = result.getKey().getName();
-  	  		memcacheVal = (TaskDataValue) syncCache.get(resKeyname);
-  	  		if (memcacheVal != null)
-  	  			resp.getWriter().println("keyname: " + resKeyname + memcacheVal.getPrintableString() + "<br>");
+  	  		memcacheVal = (TaskData) syncCache.get(resKeyname);
+
+  	  		if (memcacheVal != null) {
+  	  			String resValue = memcacheVal.getValue();
+  	  			Date resDate = memcacheVal.getDate();
+  	  			resp.getWriter().println("keyname: " + resKeyname + ", value: " + resValue + ", date: " + resDate + "<br>");
+  	  		}
   	  	}
 
   	  }
@@ -65,21 +68,21 @@ public class DatastoreServlet extends HttpServlet {
 
   	  	Entity taskData = null;
 
-  	  	memcacheVal = (TaskDataValue) syncCache.get(keyname);
+  	  	memcacheVal = (TaskData) syncCache.get(keyname);
   	  	if (memcacheVal == null) {
   	  		try {
   	  			taskData = datastore.get(k);
 
   	  			resp.getWriter().println("Datastore" + "<br>");
+
   	  			String resKeyname = taskData.getKey().getName();
   	  			String resValue = (String) taskData.getProperty("value");
   	  			Date resDate = (Date) taskData.getProperty("date");
   	  			resp.getWriter().println("keyname: " + resKeyname + ", value: " + resValue + ", date: " + resDate + "<br>");
 
-  	  			TaskDataValue taskDataValue = new TaskDataValue(resValue);
-
-  	  			syncCache.put(resKeyname, taskDataValue);
-  	  			resp.getWriter().println("Stored KEY: " + resKeyname + taskDataValue.getPrintableString() + " in Memcache" + "<br>");
+  	  			TaskData taskDataI = new TaskData(resKeyname, resValue, resDate);
+  	  			syncCache.put(resKeyname, taskDataI);
+  	  			resp.getWriter().println("Stored KEY: " + resKeyname + " and value: " + resValue + ", date: " + resDate + " in Memcache" + "<br>");
   	  		} catch (EntityNotFoundException e) {
   	  			resp.getWriter().println("Neither" + "<br>");
   	  		}
@@ -102,16 +105,16 @@ public class DatastoreServlet extends HttpServlet {
 
   	  else if (keyname != null && value != null) {
   	  	Entity taskData = new Entity("TaskData", keyname);
-  	  	taskData.setProperty("value", value);
   	  	Date d = new Date();
+  	  	taskData.setProperty("value", value);
   	  	taskData.setProperty("date", d);
 
   	  	datastore.put(taskData);
   	  	resp.getWriter().println("Stored KEY: " + keyname + " and value: " + value + ", date: " + d + " in Datastore" + "<br>");
 
-  	  	TaskDataValue taskDataValue = new TaskDataValue(value);
-  	  	syncCache.put(keyname, taskDataValue);
-  	  	resp.getWriter().println("Stored KEY: " + keyname + taskDataValue.getPrintableString() + " in Memcache" + "<br>");
+  	  	TaskData taskDataI = new TaskData(keyname, value, d);
+  	  	syncCache.put(keyname, taskDataI);
+  	  	resp.getWriter().println("Stored KEY: " + keyname + " and value: " + value + ", date: " + d + " in Memcache" + "<br>");
   	  }
 
       resp.getWriter().println("</body></html>");
