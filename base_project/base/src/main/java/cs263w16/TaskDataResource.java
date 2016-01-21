@@ -141,7 +141,7 @@ public class TaskDataResource {
 
     try {
       datastore.delete(k);
-    } catch (DatastoreFailureException e) {
+    } catch (Exception e) {
       System.out.println("There is a DatastoreFailureException");
     }
   }
