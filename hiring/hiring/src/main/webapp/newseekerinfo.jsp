@@ -14,17 +14,7 @@
 
 <h1>Hiring Platform</h1>
 
-<p>I am a job seeker, <a href="newseekerinfo.jsp">POST</a> my information!</p>
-<p>I am an employer, POST my positions!</p>
-
 <%
-/*
-    String guestbookName = request.getParameter("guestbookName");
-    if (guestbookName == null) {
-        guestbookName = "default";
-    }
-    pageContext.setAttribute("guestbookName", guestbookName);
-*/
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
@@ -43,10 +33,15 @@ else {
 }
 %>
 
-<!--form action="/home.jsp" method="get">
-    <div><input type="text" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/></div>
-    <div><input type="submit" value="Switch Guestbook"/></div>
-</form-->
+<form action="/enqueue/newseekerinfo" method="post">
+	<p>First Name</p>
+    <div><input type="text" name="firstName"/></div>
+    <p>Last Name</p>
+    <div><input type="text" name="lastName"/></div>
+    <p>Address</p>
+    <div><input type="text" name="address"/></div>
+    <div><input type="submit" value="Submit"/></div>
+</form>
 
 </body>
 </html>

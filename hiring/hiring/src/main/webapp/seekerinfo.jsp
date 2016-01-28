@@ -2,7 +2,10 @@
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="java.util.List" %>
+<%@ page import="com.google.appengine.api.datastore.*" %>
+<%@ page import="com.google.appengine.api.memcache.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.util.logging.*" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -14,17 +17,7 @@
 
 <h1>Hiring Platform</h1>
 
-<p>I am a job seeker, <a href="newseekerinfo.jsp">POST</a> my information!</p>
-<p>I am an employer, POST my positions!</p>
-
 <%
-/*
-    String guestbookName = request.getParameter("guestbookName");
-    if (guestbookName == null) {
-        guestbookName = "default";
-    }
-    pageContext.setAttribute("guestbookName", guestbookName);
-*/
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
@@ -43,10 +36,29 @@ else {
 }
 %>
 
-<!--form action="/home.jsp" method="get">
-    <div><input type="text" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/></div>
-    <div><input type="submit" value="Switch Guestbook"/></div>
-</form-->
+<%
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+
+    Query q = new Query("SeekerInfo");
+    PreparedQuery pq = datastore.prepare(q);
+    %>
+    <table>
+<%
+    for (Entity e : pq.asIterable()) {
+    String firstName = (String) e.getProperty("firstName");
+    String lastName = (String) e.getProperty("lastName");
+    String address = (String) e.getProperty("address");
+%>    <tr>
+        <td><%=firstName %></td>
+        <td><%=lastName %></td>
+        <td><%=address %></td>
+    </tr>
+    <%
+}
+%>
+    </table>
 
 </body>
 </html>

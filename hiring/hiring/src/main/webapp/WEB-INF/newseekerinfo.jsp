@@ -14,17 +14,10 @@
 
 <h1>Hiring Platform</h1>
 
-<p>I am a job seeker, <a href="newseekerinfo.jsp">POST</a> my information!</p>
+<p>I am a job seeker, POST my information!</p>
 <p>I am an employer, POST my positions!</p>
 
 <%
-/*
-    String guestbookName = request.getParameter("guestbookName");
-    if (guestbookName == null) {
-        guestbookName = "default";
-    }
-    pageContext.setAttribute("guestbookName", guestbookName);
-*/
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
