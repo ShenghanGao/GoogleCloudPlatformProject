@@ -34,14 +34,14 @@ else {
 %>
 
 <form action="/enqueue/newseekerinfo" method="post">
-	<p>First Name</p>
+    <p>First Name</p>
     <div><input type="text" name="firstName"/></div>
     <p>Last Name</p>
     <div><input type="text" name="lastName"/></div>
     <p>Address</p>
     <div><input type="text" name="address"/></div>
     <div><input type="submit" value="Submit"/></div>
-</form>
+ </form>
 
 </body>
 </html>

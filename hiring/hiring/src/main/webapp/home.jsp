@@ -15,7 +15,7 @@
 <h1>Hiring Platform</h1>
 
 <p>I am a job seeker, <a href="newseekerinfo.jsp">POST</a> my information!</p>
-<p>I am an employer, POST my positions!</p>
+<p>I am an employer, <a href="newposinfo.jsp">POST</a> my positions!</p>
 
 <%
 /*

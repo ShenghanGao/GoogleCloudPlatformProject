@@ -36,10 +36,15 @@ else {
 }
 %>
 
-<!--form action="/home.jsp" method="get">
-    <div><input type="text" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/></div>
-    <div><input type="submit" value="Switch Guestbook"/></div>
-</form-->
+<form action="/enqueue/newposinfo" method="post">
+	<p>Title</p>
+    <div><input type="text" name="title"/></div>
+    <p>Location</p>
+    <div><input type="text" name="location"/></div>
+    <p>Description</p>
+    <div><input type="text" name="description"/></div>
+    <div><input type="submit" value="Submit"/></div>
+</form>
 
 </body>
 </html>
