@@ -22,18 +22,17 @@
 %>
 
 <p>Hello,${fn:escapeXml(user.nickname)}!(You can
-            <a href="<%=userService.createLogoutURL(request.getRequestURI())%>">Sign out</a>.)</p>
+            <a href="<%=userService.createLogoutURL("/")%>">Sign out</a>.)</p>
 <%
 }
 else {
-%>
-
-<p>Hello!<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a> to include your name with greetings.</p>
-<%
+    response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 }
 %>
 
 <form action="/enqueue/newseekerinfo" method="post">
+    <p>Profile Name</p>
+    <div><input type="text" name="profileName"></div>
     <p>First Name</p>
     <div><input type="text" name="firstName"/></div>
     <p>Last Name</p>

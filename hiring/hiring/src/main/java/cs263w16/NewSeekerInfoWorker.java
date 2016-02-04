@@ -7,18 +7,26 @@ import java.util.*;
 import java.util.logging.*;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.memcache.*;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class NewSeekerInfoWorker extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
+        String profileName = request.getParameter("profileName");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String address = request.getParameter("address");
         
         Date d = new Date();
-        Entity entity = new Entity("SeekerInfo", firstName+lastName);
+        Entity entity = new Entity("SeekerInfo", profileName);
         entity.setProperty("firstName", firstName);
         entity.setProperty("lastName", lastName);
         entity.setProperty("address", address);
