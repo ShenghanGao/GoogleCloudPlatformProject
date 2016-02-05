@@ -13,12 +13,13 @@ public class NewPosInfoWorker extends HttpServlet {
             throws ServletException, IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
+        String positionId = request.getParameter("positionId");
         String title = request.getParameter("title");
         String location = request.getParameter("location");
         String description = request.getParameter("description");
         
         Date d = new Date();
-        Entity entity = new Entity("PosInfo", title);
+        Entity entity = new Entity("PosInfo", positionId);
         entity.setProperty("title", title);
         entity.setProperty("location", location);
         entity.setProperty("description", description);

@@ -16,7 +16,13 @@ public class NewSeekerInfoWorker extends HttpServlet {
             throws ServletException, IOException {
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
+        //String userId = user.getUserId();
 
+        if (user == null) {
+            System.out.println("The user has not logged in!!!!!!!!");
+            response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
+            return;
+        }
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -26,7 +32,7 @@ public class NewSeekerInfoWorker extends HttpServlet {
         String address = request.getParameter("address");
         
         Date d = new Date();
-        Entity entity = new Entity("SeekerInfo", profileName);
+        Entity entity = new Entity("SeekerInfo", user.getUserId() + ":" + profileName);
         entity.setProperty("firstName", firstName);
         entity.setProperty("lastName", lastName);
         entity.setProperty("address", address);

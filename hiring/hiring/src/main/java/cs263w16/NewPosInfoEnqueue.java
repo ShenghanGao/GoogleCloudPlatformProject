@@ -12,12 +12,13 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 public class NewPosInfoEnqueue extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String positionId = request.getParameter("positionId");
         String title = request.getParameter("title");
         String location = request.getParameter("location");
         String description = request.getParameter("description");
 
         Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withUrl("/newposinfoworker").param("title", title).param("location", location).param("description", description));
+        queue.add(TaskOptions.Builder.withUrl("/newposinfoworker").param("positionId", positionId).param("title", title).param("location", location).param("description", description));
 
         response.sendRedirect("/");
     }
