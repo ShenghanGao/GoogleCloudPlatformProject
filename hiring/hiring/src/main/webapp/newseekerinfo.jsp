@@ -68,7 +68,7 @@ else {
 }
 %>
 
-<form action="/enqueue/newseekerinfo" method="post">
+<form action="/rest/infoenqueue/newseekerinfo" method="post">
     <p>Profile Name</p>
     <div><input type="text" name="profileName"></div>
     <p>First Name</p>

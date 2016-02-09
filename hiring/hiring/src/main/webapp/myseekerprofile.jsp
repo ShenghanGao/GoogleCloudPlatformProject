@@ -43,22 +43,19 @@ else {
     MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 
-    Query q = new Query("SeekerInfo");
+    Key userKey = KeyFactory.createKey("User", userId);
+    Query q = new Query("SeekerInfo").setAncestor(userKey);
     PreparedQuery pq = datastore.prepare(q);
     %>
     <table>
 <%
     for (Entity e : pq.asIterable()) {
-    String keyname = e.getKey().getName();
-    String[] tmp = keyname.split(":");
-    //String userIdInKey = tmp[0];
-    //String profileNameInKey= tmp[1];
-    //if (userId == null || userId.compareTo(userIdInKey) != 0) continue;
+    String myUserId = (String) e.getProperty("userId");
     String firstName = (String) e.getProperty("firstName");
     String lastName = (String) e.getProperty("lastName");
     String address = (String) e.getProperty("address");
 %>    <tr>
-        <td><%=keyname%></td>
+        <td><%=myUserId %></td>
 
         <td><%=firstName %></td>
         <td><%=lastName %></td>

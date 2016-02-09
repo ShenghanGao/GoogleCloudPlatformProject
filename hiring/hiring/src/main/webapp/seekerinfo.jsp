@@ -47,10 +47,12 @@ else {
     <table>
 <%
     for (Entity e : pq.asIterable()) {
+    String userId = (String) e.getProperty("userId");
     String firstName = (String) e.getProperty("firstName");
     String lastName = (String) e.getProperty("lastName");
     String address = (String) e.getProperty("address");
 %>    <tr>
+        <td><%=userId %></td>
         <td><%=firstName %></td>
         <td><%=lastName %></td>
         <td><%=address %></td>

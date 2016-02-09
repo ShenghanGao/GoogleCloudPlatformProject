@@ -43,7 +43,8 @@ else {
     MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 
-    Query q = new Query("SeekerInfo");
+    Key userKey = KeyFactory.createKey("User", userId);
+    Query q = new Query("SeekerInfo").setAncestor(userKey);
     PreparedQuery pq = datastore.prepare(q);
     %>
     <table>

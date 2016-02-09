@@ -36,7 +36,7 @@ else {
 }
 %>
 
-<form action="/enqueue/newposinfo" method="post">
+<form action="/rest/infoenqueue/newposinfo" method="post">
     <p>Title</p>
     <div><input type="text" name="positionId"/></div>
 	<p>Title</p>
