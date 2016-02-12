@@ -74,7 +74,7 @@ public class InfoEnqueue {
         queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/newseekerinfoworker").param("userId", userId).param("profileName", profileName).param("firstName", firstName).param("lastName", lastName).param("address", address));
 
         //response.sendRedirect("/home.jsp");
-        return Response.temporaryRedirect(new URI("/")).build();
+        return Response.temporaryRedirect(new URI("/newexpinfo.jsp?profileName="+profileName)).build();
     }
 
 
@@ -110,5 +110,44 @@ public class InfoEnqueue {
         response.sendRedirect("/home.jsp");
   }
 
+  @POST
+  @Path("/newexpinfo")
+  //@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  @Consumes("application/x-www-form-urlencoded")
+  public void newExpInfo(@FormParam("profileName") String profileName,
+    @FormParam("expName") String expName,
+    @FormParam("title") String title,
+      @FormParam("companyName") String companyName,
+      @FormParam("location") String location,
+      @FormParam("timePeriod") String timePeriod,
+      @FormParam("description") String description,
+      @Context HttpServletRequest request,
+      @Context HttpServletResponse response
+    ) throws Exception {
+    UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        String userId = user.getUserId();
+
+        if (user != null) {
+            System.out.println("The user is not null!!! User Id is " + userId);
+        }
+        else
+            System.out.println("The user is NULL!!!NULLNULLNULLNULLNULLNULLNULLNULLNULLNULLNULLNULLNULLNULLNULL");
+/*
+        myPositionId = request.getParameter("positionId");
+        myTitle = request.getParameter("title");
+        myLocation = request.getParameter("location");
+        myDescription = request.getParameter("description");
+*/
+        //String profileName = request.getParameter("profileName");
+        System.out.println("profileName = " + profileName);
+
+        Queue queue = QueueFactory.getDefaultQueue();
+        queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/newexpinfoworker").param("userId", userId).param("profileName", profileName).param("expName", expName)
+          .param("title", title).param("companyName", companyName).param("location", location)
+          .param("timePeriod", timePeriod).param("description", description));
+
+        response.sendRedirect("/home.jsp");
+  }
 
 }

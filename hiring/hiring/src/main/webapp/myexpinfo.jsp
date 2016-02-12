@@ -27,7 +27,7 @@
 %>
 
 <p>Hello,${fn:escapeXml(user.nickname)}!(You can
-            <a href="<%=userService.createLogoutURL(request.getRequestURI())%>">Sign out</a>.)</p>
+            <a href="<%=userService.createLogoutURL("/")%>">Sign out</a>.)</p>
 <%
 }
 else {
@@ -43,25 +43,28 @@ else {
     MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 
+    String profileName = request.getParameter("profileName");
+
     Key userKey = KeyFactory.createKey("User", userId);
-    Query q = new Query("SeekerInfo").setAncestor(userKey);
+    Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
+
+    Query q = new Query("SeekerExpInfo").setAncestor(seekerInfoKey);
     PreparedQuery pq = datastore.prepare(q);
+
     %>
     <table>
 <%
     for (Entity e : pq.asIterable()) {
-    String myUserId = (String) e.getProperty("userId");
-    String firstName = (String) e.getProperty("firstName");
-    String lastName = (String) e.getProperty("lastName");
-    String address = (String) e.getProperty("address");
-    String profileName = (String) e.getProperty("profileName");
-%>    <tr>
-        <td><a href="/myexpinfo.jsp?profileName=<%=profileName %>">details</a></td>
-        <td><%=myUserId %></td>
-        <td><%=profileName %></td>
-        <td><%=firstName %></td>
-        <td><%=lastName %></td>
-        <td><%=address %></td>
+    String myProfileName = (String) e.getProperty("profileName");
+    String title = (String) e.getProperty("title");
+    String location = (String) e.getProperty("location");
+    String description = (String) e.getProperty("description");
+%>  <tr>
+<td><%=userId %></td>
+        <td><%=myProfileName %></td>
+        <td><%=title %></td>
+        <td><%=location %></td>
+        <td><%=description %></td>
     </tr>
     <%
 }
