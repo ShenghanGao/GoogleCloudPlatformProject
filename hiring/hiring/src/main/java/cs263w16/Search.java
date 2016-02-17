@@ -10,6 +10,7 @@ import com.google.appengine.api.memcache.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -45,11 +46,13 @@ public class Search {
     @Context HttpServletRequest request,
     @Context HttpServletResponse response
     ) throws Exception {
-    //System.out.println("lastNameSearch = " + lastNameSearch);
-    //String tmp = request.getParameter("lastNameSearch");
+    System.out.println("firstNameSearch = " + firstNameSearch);
+    System.out.println("lastNameSearch = " + lastNameSearch);
 
-         return Response.temporaryRedirect(new URI("/seekerinfo.jsp?firstNameSearch=" + firstNameSearch + "&lastNameSearch="+lastNameSearch)).build();
-        //return Response.temporaryRedirect(new URI("/seekerinfo.jsp?lastNameSearch="+tmp)).build();
+    String des = "/seekerinfo.jsp?firstNameSearch=" + URLEncoder.encode(firstNameSearch, "UTF-8") + "&lastNameSearch=" + URLEncoder.encode(lastNameSearch, "UTF-8");
+
+    //return Response.temporaryRedirect(new URI("/seekerinfo.jsp?firstNameSearch=" + firstNameSearch + "&lastNameSearch="+lastNameSearch)).build();
+    return Response.temporaryRedirect(new URI(des)).build();
 
     }
 

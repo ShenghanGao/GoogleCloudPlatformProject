@@ -70,6 +70,8 @@ else {
     Filter firstNameFilter = new FilterPredicate("firstName",
     FilterOperator.EQUAL, firstNameSearch);
 
+    setQueryFilterAnd(q, firstNameFilter);
+/*
 if (qFilter == null) {
     q.setFilter(firstNameFilter);
 }
@@ -84,6 +86,7 @@ else {
 
     q.setFilter(compositeFilter);
 }
+*/
 }
 
     if (lastNameSearch != null && !lastNameSearch.isEmpty()) {
@@ -93,7 +96,8 @@ else {
 
     Filter lastNameFilter = new FilterPredicate("lastName",
     FilterOperator.EQUAL, lastNameSearch);
-
+    setQueryFilterAnd(q, lastNameFilter);
+/*
 if (qFilter == null) {
     q.setFilter(lastNameFilter);
 }
@@ -106,6 +110,7 @@ else {
 
     q.setFilter(compositeFilter);
 }
+*/
     }
 
 
@@ -139,3 +144,21 @@ else {
 
 </body>
 </html>
+
+<%!
+private static void setQueryFilterAnd(Query q, Filter filter) {
+    Filter qFilter = q.getFilter();
+    if (qFilter == null)
+        q.setFilter(filter);
+
+    else {
+        List<Filter> filters = new ArrayList<Filter> ();
+    filters.add(qFilter);
+    filters.add(filter);
+
+    Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND, filters);
+
+    q.setFilter(compositeFilter);
+}
+}
+%>

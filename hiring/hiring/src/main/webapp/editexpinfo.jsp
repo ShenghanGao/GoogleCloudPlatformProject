@@ -19,6 +19,7 @@
 
 <%
     UserService userService = UserServiceFactory.getUserService();
+
     User user = userService.getCurrentUser();
     String userId = null;
     if (user != null) {
@@ -36,61 +37,46 @@ else {
 <p>Hello!<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a> to include your name with greetings.</p>
 <%
 }
-%>
 
-<%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 
     String profileName = request.getParameter("profileName");
+    String expName = request.getParameter("expName");
 
     Key userKey = KeyFactory.createKey("User", userId);
     Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
+    Key expInfoKey = KeyFactory.createKey(seekerInfoKey, "SeekerExpInfo", expName);
 
-    Query q = new Query("SeekerExpInfo").setAncestor(seekerInfoKey);
-    PreparedQuery pq = datastore.prepare(q);
+    Entity expInfo = datastore.get(expInfoKey);
 
-    %>
+    String myExpName = (String) expInfo.getProperty("expName");
+    String title = (String) expInfo.getProperty("title");
+    String companyName = (String) expInfo.getProperty("companyName");
+    String location = (String) expInfo.getProperty("location");
+    String timePeriod = (String) expInfo.getProperty("timePeriod");
+    String description = (String) expInfo.getProperty("description");
 
-    <a href="/newexpinfo.jsp?profileName=<%=profileName%>">Add new exp to this profile</a>
-
-    <table>
-    <tr>
-        <td>userId</td>
-        <td>myProfileName</td>
-        <td>expName</td>
-        <td>title</td>
-        <td>companyName</td>
-        <td>location</td>
-        <td>timePeriod</td>
-        <td>description</td>
-    </tr>
-<%
-    for (Entity e : pq.asIterable()) {
-    String myProfileName = (String) e.getProperty("profileName");
-
-    String expName = (String) e.getProperty("expName");
-    String title = (String) e.getProperty("title");
-    String companyName = (String) e.getProperty("companyName");
-    String location = (String) e.getProperty("location");
-    String timePeriod = (String) e.getProperty("timePeriod");
-    String description = (String) e.getProperty("description");
-%>  <tr>
-        <td><%=userId %></td>
-        <td><%=myProfileName %></td>
-        <td><%=expName %></td>
-        <td><%=title %></td>
-        <td><%=companyName %></td>
-        <td><%=location %></td>
-        <td><%=timePeriod %></td>
-        <td><%=description %></td>
-        <td><a href="editexpinfo.jsp?profileName=<%=myProfileName%>&amp;expName=<%=expName%>"> Edit this exp</a></td>
-    </tr>
-    <%
-}
 %>
-    </table>
+
+<form action="/rest/infoenqueue/newexpinfo" method="post">
+    <input type="hidden" name="profileName" value="<%=profileName%>"/>
+    <p>Experience Name: <%=myExpName%> is being edited!</p>
+    <div><input type="hidden" name="expName" value="<%=myExpName%>"/></div>
+    <p>Title</p>
+    <div><input type="text" name="title" value="<%=title%>"/></div>
+    <p>Company Name</p>
+    <div><input type="text" name="companyName" value="<%=companyName%>"/></div>
+    <p>Location</p>
+    <div><input type="text" name="location" value="<%=location%>"/></div>
+    <p>Time Period</p>
+    <div><input type="text" name="timePeriod" value="<%=timePeriod%>"/></div>
+    <p>Description</p>
+    <div><input type="text" name="description" value="<%=description%>"/></div>
+    <div><input type="submit" value="Submit"/></div>
+ </form>
+
 
 </body>
 </html>
