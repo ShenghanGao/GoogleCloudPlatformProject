@@ -17,6 +17,8 @@
 <p>I am a job seeker, <a href="newseekerinfo.jsp">POST</a> my information!</p>
 <p>I am an employer, <a href="newposinfo.jsp">POST</a> my positions!</p>
 
+<p>All job seekers: <a href="seekerinfo.jsp">Link</a></p>
+
 <%
 /*
     String guestbookName = request.getParameter("guestbookName");

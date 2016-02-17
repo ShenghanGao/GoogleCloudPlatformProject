@@ -36,6 +36,13 @@ public class InfoWorker {
   public void newSeekerInfoWorker(
       @Context HttpServletRequest request
     ) throws IOException {
+int[] a = {1, 5, 3, 2};
+Arrays.sort(a);
+System.out.println("Sorting is complete!");
+for (int i : a)
+  System.out.print(i + " ");
+
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         String userId = request.getParameter("userId");
