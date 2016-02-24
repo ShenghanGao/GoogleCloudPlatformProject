@@ -47,9 +47,8 @@ else {
 
     Key userKey = KeyFactory.createKey("User", userId);
     Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
-    Key expInfoKey = KeyFactory.createKey(seekerInfoKey, "SeekerExpInfo", expName);
 
-    Entity expInfo = datastore.get(expInfoKey);
+    Entity expInfo = datastore.get(seekerInfoKey);
 
     String myExpName = (String) expInfo.getProperty("expName");
     String title = (String) expInfo.getProperty("title");
@@ -60,7 +59,7 @@ else {
 
 %>
 
-<form action="/rest/infoenqueue/newexpinfo" method="post">
+<form action="/rest/infoenqueue/newseekerinfo" method="post">
     <input type="hidden" name="profileName" value="<%=profileName%>"/>
     <p>Experience Name: <%=myExpName%> is being edited!</p>
     <div><input type="hidden" name="expName" value="<%=myExpName%>"/></div>

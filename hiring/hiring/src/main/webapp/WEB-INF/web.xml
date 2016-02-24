@@ -38,6 +38,15 @@
 </servlet-mapping-->
 
     <servlet>
+      <servlet-name>Blobstore New Photo</servlet-name>
+      <servlet-class>cs263w16.BlobstoreNewPhoto</servlet-class>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>Blobstore New Photo</servlet-name>
+      <url-pattern>/blobstorenewphoto</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
     	<servlet-name>Jersey REST Service</servlet-name>
     	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class> 
     	<!-- Register resources and providers under com.vogella.jersey.first package. -->

@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -74,7 +75,8 @@ public class InfoEnqueue {
         queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/newseekerinfoworker").param("userId", userId).param("profileName", profileName).param("firstName", firstName).param("lastName", lastName).param("address", address));
 
         //response.sendRedirect("/home.jsp");
-        return Response.temporaryRedirect(new URI("/newexpinfo.jsp?profileName="+profileName)).build();
+        String des = "/profileaction.jsp?profileName=" + URLEncoder.encode(profileName, "UTF-8");
+        return Response.temporaryRedirect(new URI(des)).build();
     }
 
 
@@ -114,7 +116,7 @@ public class InfoEnqueue {
   @Path("/newexpinfo")
   //@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Consumes("application/x-www-form-urlencoded")
-  public void newExpInfo(@FormParam("profileName") String profileName,
+  public Response newExpInfo(@FormParam("profileName") String profileName,
     @FormParam("expName") String expName,
     @FormParam("title") String title,
       @FormParam("companyName") String companyName,
@@ -147,7 +149,51 @@ public class InfoEnqueue {
           .param("title", title).param("companyName", companyName).param("location", location)
           .param("timePeriod", timePeriod).param("description", description));
 
-        response.sendRedirect("/home.jsp");
+        String des = "/profileaction.jsp?profileName=" + URLEncoder.encode(profileName, "UTF-8");
+        return Response.temporaryRedirect(new URI(des)).build();
   }
 
+  @POST
+  @Path("/deleteexpinfo")
+  public Response deleteExpInfo(
+      @Context HttpServletRequest request,
+      @Context HttpServletResponse response
+    ) throws Exception {
+    UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        String userId = user.getUserId();
+
+
+    String profileName = request.getParameter("profileName");
+    String expName = request.getParameter("expName");
+    System.out.println("profileName: " + profileName);
+    System.out.println("expName: " + expName);
+
+        Queue queue = QueueFactory.getDefaultQueue();
+        queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/deleteexpinfoworker").param("userId", userId).param("profileName", profileName).param("expName", expName));
+
+        String des = "/myexpinfo.jsp?profileName=" + URLEncoder.encode(profileName, "UTF-8");
+        return Response.temporaryRedirect(new URI(des)).build();
+    }
+
+  @POST
+  @Path("/deleteseekerinfo")
+  public Response deleteSeekerInfo(
+      @Context HttpServletRequest request,
+      @Context HttpServletResponse response
+    ) throws Exception {
+    UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        String userId = user.getUserId();
+
+
+    String profileName = request.getParameter("profileName");
+    System.out.println("profileName: " + profileName);
+
+        Queue queue = QueueFactory.getDefaultQueue();
+        queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/deleteexpinfoworker").param("userId", userId).param("profileName", profileName));
+
+        String des = "/myseekerinfo.jsp";
+        return Response.temporaryRedirect(new URI(des)).build();
+    }
 }

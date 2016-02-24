@@ -19,6 +19,7 @@
 
 <%
     UserService userService = UserServiceFactory.getUserService();
+
     User user = userService.getCurrentUser();
     String userId = null;
     if (user != null) {
@@ -36,9 +37,7 @@ else {
 <p>Hello!<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a> to include your name with greetings.</p>
 <%
 }
-%>
 
-<%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
@@ -48,55 +47,26 @@ else {
     Key userKey = KeyFactory.createKey("User", userId);
     Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
 
-    Query q = new Query("SeekerExpInfo").setAncestor(seekerInfoKey);
-    PreparedQuery pq = datastore.prepare(q);
+    Entity expInfo = datastore.get(seekerInfoKey);
 
-    %>
+    String myProfileName = (String) expInfo.getProperty("profileName");
+    String firstName = (String) expInfo.getProperty("firstName");
+    String lastName = (String) expInfo.getProperty("lastName");
+    String address = (String) expInfo.getProperty("address");
 
-    <a href="/newexpinfo.jsp?profileName=<%=profileName%>">Add new exp to this profile</a>
-
-    <table>
-    <tr>
-        <td>userId</td>
-        <td>myProfileName</td>
-        <td>expName</td>
-        <td>title</td>
-        <td>companyName</td>
-        <td>location</td>
-        <td>timePeriod</td>
-        <td>description</td>
-    </tr>
-<%
-    for (Entity e : pq.asIterable()) {
-    String myProfileName = (String) e.getProperty("profileName");
-
-    String expName = (String) e.getProperty("expName");
-    String title = (String) e.getProperty("title");
-    String companyName = (String) e.getProperty("companyName");
-    String location = (String) e.getProperty("location");
-    String timePeriod = (String) e.getProperty("timePeriod");
-    String description = (String) e.getProperty("description");
-%>  <tr>
-        <td><%=userId %></td>
-        <td><%=myProfileName %></td>
-        <td><%=expName %></td>
-        <td><%=title %></td>
-        <td><%=companyName %></td>
-        <td><%=location %></td>
-        <td><%=timePeriod %></td>
-        <td><%=description %></td>
-        <td><a href="/editexpinfo.jsp?profileName=<%=myProfileName%>&amp;expName=<%=expName%>"> Edit this exp</a></td>
-        <td>
-            <form action="/rest/infoenqueue/deleteexpinfo?profileName=<%=myProfileName%>&amp;expName=<%=expName%>" method="post">
-                <input type="submit" value="Delete this exp" />
-            </form>
-
-        </td>
-    </tr>
-    <%
-}
 %>
-    </table>
+
+<form action="/rest/infoenqueue/newseekerinfo" method="post">
+    <p>Profile Name: <%=myProfileName%> is being edited!</p>
+    <input type="hidden" name="profileName" value="<%=myProfileName%>"/>
+    <p>First Name</p>
+    <div><input type="text" name="firstName" value="<%=firstName%>"/></div>
+    <p>Last Name</p>
+    <div><input type="text" name="lastName" value="<%=lastName%>"/></div>
+    <p>Address</p>
+    <div><input type="text" name="address" value="<%=address%>"/></div>
+    <div><input type="submit" value="Submit"/></div>
+</form>
 
 </body>
 </html>

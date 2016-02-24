@@ -123,5 +123,50 @@ for (int i : a)
 
   }
 
+  @POST
+  @Path("/deleteseekerinfoworker")
+  public void deleteSeekerInfoWorker(
+      @Context HttpServletRequest request
+    ) throws IOException {
+    String userId = request.getParameter("userId");
+        String profileName = request.getParameter("profileName");
+
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Key userKey = KeyFactory.createKey("User", userId);
+        Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
+
+        Query q = new Query("SeekerExpInfo").setAncestor(seekerInfoKey);
+        PreparedQuery pq = datastore.prepare(q);
+
+        //System.out.println("pq size: " + pq.asIterable().size());
+
+        for (Entity e : pq.asIterable()) {
+          datastore.delete(e.getKey());
+        }
+
+        //datastore.delete(expInfoKey);
+
+  }
+
+  @POST
+  @Path("/deleteexpinfoworker")
+  public void deleteExpInfoWorker(
+      @Context HttpServletRequest request
+    ) throws IOException {
+    String userId = request.getParameter("userId");
+        String profileName = request.getParameter("profileName");
+        String expName = request.getParameter("expName");
+
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Key userKey = KeyFactory.createKey("User", userId);
+        Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
+        Key expInfoKey = KeyFactory.createKey(seekerInfoKey, "SeekerExpInfo", expName);
+
+        datastore.delete(expInfoKey);
+
+  }
+
 
 }
