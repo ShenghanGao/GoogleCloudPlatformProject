@@ -51,6 +51,8 @@ else {
     <input type="search" name="firstNameSearch">
     LastName:
     <input type="search" name="lastNameSearch">
+    Tag:
+    <input type="search" name="tagSearch">
     <input type="submit">
 </form>
 
@@ -60,6 +62,7 @@ else {
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
     String firstNameSearch = request.getParameter("firstNameSearch");
     String lastNameSearch = request.getParameter("lastNameSearch");
+    String tagSearch = request.getParameter("tagSearch");
 
     Query q = new Query("SeekerInfo");
 
@@ -113,6 +116,16 @@ else {
 */
     }
 
+        if (tagSearch != null && !tagSearch.isEmpty()) {
+
+    Filter qFilter = q.getFilter();
+    //List<String> l = new ArrayList<String> ();
+    //l.add(tagSearch);
+    Filter tagFilter = new FilterPredicate("tags",
+    FilterOperator.EQUAL, tagSearch);
+    setQueryFilterAnd(q, tagFilter);
+    }
+
 
     PreparedQuery pq = datastore.prepare(q);
     %>
@@ -122,6 +135,7 @@ else {
         <td>firstName</td>
         <td>lastName</td>
         <td>address</td>
+        <td>Tags</td>
     </tr>   
 <tr>
 <%
@@ -130,12 +144,22 @@ else {
     String firstName = (String) e.getProperty("firstName");
     String lastName = (String) e.getProperty("lastName");
     String address = (String) e.getProperty("address");
+    List<String> tags = (List<String>) e.getProperty("tags");
+    StringBuilder sb = new StringBuilder();
+    if (tags != null) {
+    for (int i = 0; i <= tags.size()-2; ++i) {
+    sb.append(tags.get(i));
+    sb.append(", ");
+}
+    sb.append(tags.get(tags.size()-1));
+}
 %> 
 
         <td><%=userId %></td>
         <td><%=firstName %></td>
         <td><%=lastName %></td>
         <td><%=address %></td>
+        <td><%=sb.toString() %></td>
     </tr>
     <%
 }

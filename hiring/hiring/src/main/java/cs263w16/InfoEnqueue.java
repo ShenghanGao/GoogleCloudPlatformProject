@@ -112,6 +112,29 @@ public class InfoEnqueue {
         response.sendRedirect("/home.jsp");
   }
 
+
+  @POST
+  @Path("/addatagtoprofile")
+  @Consumes("application/x-www-form-urlencoded")
+  public Response addATagToProfile(
+    @FormParam("profileName") String profileName,
+    @FormParam("tag") String tag,
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+    ) throws Exception {
+      UserService userService = UserServiceFactory.getUserService();
+      User user = userService.getCurrentUser();
+      String userId = user.getUserId();
+
+      System.out.println("profileName: " + profileName);
+
+      Queue queue = QueueFactory.getDefaultQueue();
+      queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/addatagtoprofileworker").param("userId", userId).param("profileName", profileName).param("tag", tag.trim()));
+
+      String des = "/myseekerprofile.jsp?profileName=" + URLEncoder.encode(profileName, "UTF-8");
+      return Response.temporaryRedirect(new URI(des)).build();
+    }
+
   @POST
   @Path("/newexpinfo")
   //@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -193,7 +216,7 @@ public class InfoEnqueue {
         Queue queue = QueueFactory.getDefaultQueue();
         queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/deleteexpinfoworker").param("userId", userId).param("profileName", profileName));
 
-        String des = "/myseekerinfo.jsp";
+        String des = "/myseekerprofile.jsp?profileName=" + URLEncoder.encode(profileName, "UTF-8");
         return Response.temporaryRedirect(new URI(des)).build();
     }
 }

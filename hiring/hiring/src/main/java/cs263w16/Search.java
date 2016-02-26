@@ -43,13 +43,15 @@ public class Search {
   public Response newSeekerInfoWorker(
     @FormParam("firstNameSearch") String firstNameSearch,
     @FormParam("lastNameSearch") String lastNameSearch,
+    @FormParam("tagSearch") String tagSearch,
     @Context HttpServletRequest request,
     @Context HttpServletResponse response
     ) throws Exception {
     System.out.println("firstNameSearch = " + firstNameSearch);
     System.out.println("lastNameSearch = " + lastNameSearch);
 
-    String des = "/seekerinfo.jsp?firstNameSearch=" + URLEncoder.encode(firstNameSearch, "UTF-8") + "&lastNameSearch=" + URLEncoder.encode(lastNameSearch, "UTF-8");
+    String des = "/seekerinfo.jsp?firstNameSearch=" + URLEncoder.encode(firstNameSearch, "UTF-8") + "&lastNameSearch=" + URLEncoder.encode(lastNameSearch, "UTF-8")
+    + "&tagSearch=" + URLEncoder.encode(tagSearch, "UTF-8");
 
     //return Response.temporaryRedirect(new URI("/seekerinfo.jsp?firstNameSearch=" + firstNameSearch + "&lastNameSearch="+lastNameSearch)).build();
     return Response.temporaryRedirect(new URI(des)).build();

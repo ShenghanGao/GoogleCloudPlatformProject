@@ -36,13 +36,6 @@ public class InfoWorker {
   public void newSeekerInfoWorker(
       @Context HttpServletRequest request
     ) throws IOException {
-int[] a = {1, 5, 3, 2};
-Arrays.sort(a);
-System.out.println("Sorting is complete!");
-for (int i : a)
-  System.out.print(i + " ");
-
-
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         String userId = request.getParameter("userId");
@@ -85,6 +78,39 @@ for (int i : a)
         entity.setProperty("description", description);
         datastore.put(entity);
 
+  }
+
+  @POST
+  @Path("/addatagtoprofileworker")
+  public void addATagToProfileWorker(
+      @Context HttpServletRequest request
+    ) throws Exception {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        String userId = request.getParameter("userId");
+        String profileName = request.getParameter("profileName");
+        String tag = request.getParameter("tag");
+
+        System.out.println("I am in the addATagToProfileWorker! tag = " + tag);
+
+        Key userKey = KeyFactory.createKey("User", userId);
+        Key seekerInfoKey = KeyFactory.createKey(userKey, "SeekerInfo", profileName);
+
+        Entity entity = datastore.get(seekerInfoKey);
+
+        List<String> tags = (List<String>) entity.getProperty("tags");
+
+        if (tags == null) {
+          tags = new ArrayList<> ();
+          tags.add(tag);
+        }
+        else {
+          if (!tags.contains(tag))
+            tags.add(tag);
+        }
+
+        entity.setProperty("tags", tags);
+        datastore.put(entity);
   }
 
   @POST

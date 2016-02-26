@@ -86,7 +86,7 @@ else {
 
 
 <%
-System.out.println("servingUrl = " + servingUrl);
+// System.out.println("servingUrl = " + servingUrl);
     if (servingUrl != null) {
 %>
 <td><img src="<%= servingUrl %>" height="88" width="88"></td>
@@ -106,6 +106,9 @@ System.out.println("servingUrl = " + servingUrl);
                 <input type="submit" value="Delete this seeker info" />
             </form>
 
+        </td>
+        <td>
+            <a href="/addatagtoprofile.jsp?profileName=<%=profileName%>">Add a tag to this profile</a>
         </td>
     </tr>
     <%
