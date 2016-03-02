@@ -39,6 +39,7 @@ public class InfoWorker {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         String userId = request.getParameter("userId");
+        String userEmail = request.getParameter("userEmail");
         String profileName = request.getParameter("profileName");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
@@ -51,6 +52,7 @@ public class InfoWorker {
         Entity entity = new Entity(seekerInfoKey);
         entity.setProperty("profileName", profileName);
         entity.setProperty("userId", userId);
+        entity.setProperty("userEmail", userEmail);
         entity.setProperty("firstName", firstName);
         entity.setProperty("lastName", lastName);
         entity.setProperty("address", address);

@@ -141,6 +141,8 @@ else {
 <%
     for (Entity e : pq.asIterable()) {
     String userId = (String) e.getProperty("userId");
+    String userEmail = (String) e.getProperty("userEmail");
+    System.out.println("userEmail = " + userEmail);
     String firstName = (String) e.getProperty("firstName");
     String lastName = (String) e.getProperty("lastName");
     String address = (String) e.getProperty("address");
@@ -160,6 +162,9 @@ else {
         <td><%=lastName %></td>
         <td><%=address %></td>
         <td><%=sb.toString() %></td>
+        <td>
+            <a href="sendmessage.jsp?userIdTo=<%=userId%>&amp;userEmailTo=<%=userEmail%>">Send a message</a>
+        </td>
     </tr>
     <%
 }

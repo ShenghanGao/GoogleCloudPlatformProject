@@ -59,6 +59,7 @@ public class InfoEnqueue {
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
         String userId = user.getUserId();
+        String userEmail = user.getEmail();
 
         if (user != null) {
             System.out.println("The user is not null!!! User Id is " + userId);
@@ -72,7 +73,8 @@ public class InfoEnqueue {
         myAddress = request.getParameter("address");
 */
         Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/newseekerinfoworker").param("userId", userId).param("profileName", profileName).param("firstName", firstName).param("lastName", lastName).param("address", address));
+        queue.add(TaskOptions.Builder.withUrl("/rest/infoworker/newseekerinfoworker").param("userId", userId).param("userEmail", userEmail)
+          .param("profileName", profileName).param("firstName", firstName).param("lastName", lastName).param("address", address));
 
         //response.sendRedirect("/home.jsp");
         String des = "/profileaction.jsp?profileName=" + URLEncoder.encode(profileName, "UTF-8");
